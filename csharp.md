@@ -1,5 +1,5 @@
 C# provides a variety of data structures that can be used to store, manage, and manipulate collections of data. Here are some of the basic data structures in C# along with explanations and examples of how to use them:
-
+## Data Structures
 ### 1. Arrays
 Arrays are fixed-size collections of elements of the same type. They are indexed by integers.
 
@@ -130,7 +130,7 @@ set.Remove(3); // Removes the specified element from the set
 bool contains = set.Contains(2); // Checks if the set contains the specified element
 ```
 
-Sure! Here are some common and useful functions and methods in C#:
+## Common Functions
 
 ### String Manipulation
 - **`Substring`**: Extracts a substring from a string.
@@ -216,4 +216,280 @@ Sure! Here are some common and useful functions and methods in C#:
   ```csharp
   bool success = int.TryParse("123", out int number); // success = true, number = 123
   ```
+## Examples
 
+#### 1. Sort Array By Increasing Frequency
+Given an array of integers nums, sort the array in increasing order based on the frequency of the values. If multiple values have the same frequency, sort them in decreasing order.
+
+Return the sorted array.
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+public class Solution {
+    public int[] FrequencySort(int[] nums) {
+        var frequencyDict = nums.GroupBy(n => n)
+                                .ToDictionary(g => g.Key, g => g.Count());
+
+     
+        var sortedList = nums.OrderBy(n => frequencyDict[n])
+                             .ThenByDescending(n => n)
+                             .ToList();
+
+        return sortedList.ToArray();
+   
+    }
+}
+
+```
+
+#### 2. Two Sum
+Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+You can return the answer in any order.
+
+```csharp
+public class Solution {
+    public int[] TwoSum(int[] nums, int target) {
+        Dictionary<int,int> numDict= new Dictionary<int,int>();
+        for (int i=0;i<nums.Length;i++){
+            if (numDict.ContainsKey(target-nums[i])){
+                return new[] { i,numDict[target-nums[i]]};
+            }
+            numDict[nums[i]]=i;
+        }
+        return [];
+        
+    }
+}
+
+```
+
+#### 3. Palindrome Number
+
+Given an integer x, return true if x is a palindrome, and false otherwise.
+
+```csharp
+
+public class Solution {
+    public bool IsPalindrome(int x) {
+        if ( x < 0 || (x!=0 && x%10==0)){return false;}
+        int reversedNum=0;
+        int originalNum=x;
+        while (x > 0){
+            reversedNum=reversedNum*10+x%10;
+            x/=10;
+
+        }
+        return reversedNum==originalNum;
+    }
+}
+
+```
+
+#### 4.Greatest Common Divisor of Strings
+For two strings s and t, we say "t divides s" if and only if s = t + t + t + ... + t + t (i.e., t is concatenated with itself one or more times).
+
+Given two strings str1 and str2, return the largest string x such that x divides both str1 and str2.
+
+```csharp
+public class Solution {
+    public string GcdOfStrings(string str1, string str2) {
+        if (str1+str2!= str2+str1){
+            return "";
+        }
+        int GCD (int a, int b){
+            while (b!=0){
+                int temp=a;
+                a=b;
+                b=temp%b;
+            }
+            return a;  
+        }
+        int gcd = GCD(str1.Length, str2.Length);
+
+        return str1.Substring(0,gcd);
+    }
+}
+
+```
+#### 5.Kids With the Greatest Number of Candies
+```csharp
+using System;
+using System.Linq;
+
+
+public class Solution {
+    public IList<bool> KidsWithCandies(int[] candies, int extraCandies) {
+
+        List<bool> result= new List<bool>();
+        int maxCandies= candies.Max();
+        foreach (int candy in candies){
+            if (candy+extraCandies >= maxCandies){
+                result.Add(true);
+            }
+            else{
+                result.Add(false);
+            }
+        }
+        return result;
+        
+    }
+}
+
+```
+
+#### 6. Can Place Flowers
+
+```csharp
+public class Solution {
+    public bool CanPlaceFlowers(int[] flowerbed, int n) {
+        int length=flowerbed.Length;
+        for (int i=0;i<length;i++){
+            if (flowerbed[i]==0){
+                bool emptyLeft= (i==0 || flowerbed[i-1]==0);
+                bool emptyRight= (i==length-1 || flowerbed[i+1]==0);
+                if (emptyLeft && emptyRight){
+                    flowerbed[i]=1;
+                    n--;
+                    if (n <=0){
+                        return true;
+                    }
+                }
+            
+            }
+        }
+        return n<=0;
+        
+    }
+}
+
+
+```
+
+#### 7. Reverse Vowels of a String
+
+
+```csharp
+
+using System;
+using System.Collections.Generic;
+public class Solution {
+    public string ReverseVowels(string s) {
+        int p1 = 0;
+        int p2 = s.Length-1;
+        char[] chars= s.ToCharArray();
+        HashSet<char> vowels= new HashSet<char> {'a','e','i','o','u'};
+        while (p1 < p2){
+            while (p1 < p2 && !vowels.Contains(char.ToLower(chars[p1]))){
+                p1++;
+            }
+            while (p1 < p2 && !vowels.Contains(char.ToLower(chars[p2]))){
+                p2--;
+            }
+            (chars[p1],chars[p2])=(chars[p2],chars[p1]);
+            p1++;
+            p2--;
+        }
+
+        return String.Join("", chars);
+        
+    }
+}
+```
+
+### Creating a Class in C#
+
+```csharp
+using System;
+using System.Collections.Generic;
+
+public class Report
+{
+    // Properties
+    public string Title { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public string Author { get; set; }
+    public List<string> Metrics { get; set; } // Metrics being tracked
+    public Dictionary<string, string> Filters { get; set; } // Filters for report data
+    public string VisualizationType { get; set; } // e.g., "Bar Chart", "Pie Chart", etc.
+    public string Content { get; set; } // Report content or summary
+
+    // Constructor
+    public Report(string title, string author)
+    {
+        Title = title;
+        CreatedDate = DateTime.Now;
+        Author = author;
+        Metrics = new List<string>();
+        Filters = new Dictionary<string, string>();
+        VisualizationType = "Table"; // Default visualization type
+        Content = string.Empty;
+    }
+
+    // Method to add a metric
+    public void AddMetric(string metric)
+    {
+        Metrics.Add(metric);
+    }
+
+    // Method to add a filter
+    public void AddFilter(string key, string value)
+    {
+        Filters[key] = value;
+    }
+
+    // Method to set content
+    public void SetContent(string content)
+    {
+        Content = content;
+    }
+
+    // Method to display the report
+    public void DisplayReport()
+    {
+        Console.WriteLine($"Title: {Title}");
+        Console.WriteLine($"Created Date: {CreatedDate}");
+        Console.WriteLine($"Author: {Author}");
+        Console.WriteLine("Metrics:");
+        foreach (var metric in Metrics)
+        {
+            Console.WriteLine($"- {metric}");
+        }
+        Console.WriteLine("Filters:");
+        foreach (var filter in Filters)
+        {
+            Console.WriteLine($"- {filter.Key}: {filter.Value}");
+        }
+        Console.WriteLine($"Visualization Type: {VisualizationType}");
+        Console.WriteLine("Content:");
+        Console.WriteLine(Content);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Create a new report
+        Report report = new Report("Sales Performance", "John Doe");
+
+        // Add metrics
+        report.AddMetric("Total Sales");
+        report.AddMetric("Conversion Rate");
+
+        // Add filters
+        report.AddFilter("Date Range", "Last 30 Days");
+        report.AddFilter("Region", "North America");
+
+        // Set content
+        report.SetContent("This report provides an overview of sales performance and conversion rates over the last 30 days.");
+
+        // Display the report
+        report.DisplayReport();
+    }
+}
+
+```
